@@ -1,4 +1,5 @@
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { colors } from '../utils/colors';
 
 import ResultItem from './ResultItem';
 
@@ -25,16 +26,20 @@ const DATA = [
   { word: 'Word 100' },
 ];
 
-const Results = () => {
+const Results = ({ data }) => {
   return (
     <View style={styles.container}>
-      <FlatList
-        data={DATA}
-        renderItem={({ item }) => <ResultItem item={item} />}
-        keyExtractor={item => item.word}
-        showsVerticalScrollIndicator={false}
-        overScrollMode="never"
-      />
+      {data.length > 0 ? (
+        <FlatList
+          data={data}
+          renderItem={({ item }) => <ResultItem item={item} />}
+          keyExtractor={item => item}
+          showsVerticalScrollIndicator={false}
+          overScrollMode="never"
+        />
+      ) : (
+        <Text style={styles.text}>Nothing found</Text>
+      )}
     </View>
   );
 };
@@ -43,10 +48,19 @@ export default Results;
 
 const styles = StyleSheet.create({
   container: {
-    // borderColor: 'red',
-    // borderWidth: 1,
+    // borderTopColor: 'grey',
+    // borderTopWidth: 0.3,
+    // borderStyle: 'dotted',
+    // backgroundColor: '#EBEEF2',
+    borderRadius: 5,
     width: '90%',
+    height: '90%',
     marginTop: 10,
-    marginBottom: 60,
+    // marginBottom: 60,
+    alignItems: 'center',
+    // paddingHorizontal: 10,
+  },
+  text: {
+    color: colors.primaryCream,
   },
 });

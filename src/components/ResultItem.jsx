@@ -5,6 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 import Button from './UI/Button';
 import { colors } from '../utils/colors';
+import { DefaultTheme } from '../utils/colors';
 
 const ResultItem = ({ item }) => {
   const navigation = useNavigation();
@@ -13,13 +14,13 @@ const ResultItem = ({ item }) => {
     navigation.navigate('WordDetails', { item });
   };
 
-  const star = <FontAwesome name="star" size={20} color={colors.primaryCream} />;
-  const audio = <AntDesign name="sound" size={20} color={colors.primaryGreen} />;
+  const star = <FontAwesome name="star" size={20} color={'grey'} />;
+  const audio = <AntDesign name="sound" size={20} color={DefaultTheme.colors.primary} />;
 
   return (
     <View style={styles.container}>
       <Button pressable={styles.btn} text={styles.text} onPress={handleWordPress}>
-        {item.word}
+        {item}
       </Button>
 
       <View style={styles.iconsContainer}>
@@ -37,17 +38,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottomColor: colors.primaryGreen,
+    borderBottomColor: 'grey',
     borderBottomWidth: 0.3,
+    borderStyle: 'dotted',
     paddingHorizontal: 5,
-    marginVertical: 2,
+    marginVertical: 2.5,
   },
   btn: {
     width: '82%',
   },
   text: {
     paddingVertical: 10,
-    color: colors.primaryCream,
+    color: 'grey',
   },
   iconsContainer: {
     flexDirection: 'row',
