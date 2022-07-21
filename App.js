@@ -1,27 +1,21 @@
-import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-// import { useColorScheme } from 'react-native';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer, useTheme } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+import store from './src/store';
+import { themeActions } from './src/store';
+import { DefaultTheme, DarkTheme } from './src/utils/colors';
 import WordDetails from './src/screens/WordDetails';
 import TabNavigator from './src/screens/TabNavigator';
 import Button from './src/components/UI/Button';
-import { DefaultTheme, DarkTheme } from './src/utils/colors';
 
 const Stack = createStackNavigator();
 
-function App() {
-  const [darkMode, setDarkMode] = useState(false);
-
-  // const scheme = useColorScheme();
-  // console.log(scheme);
-  // const { colors } = useTheme();
-  // console.log(colors);
-
-  // console.log(DefaultTheme);
-  // console.log(DarkTheme);
+function Index() {
+  const darkMode = useSelector(state => state.darkMode);
+  const dispatch = useDispatch();
 
   const modeIcon = (
     <MaterialCommunityIcons
@@ -45,18 +39,18 @@ function App() {
                   { marginRight: 15 },
                   pressed && { transform: [{ scale: 1.2 }] },
                 ]}
-                onPress={() => setDarkMode(val => !val)}
+                onPress={() => dispatch(themeActions.toggleMode())}
                 icon={modeIcon}
               />
             );
           },
           headerStyle: {
             height: 150,
+            // backgroundColor: DefaultTheme.colors.,
           },
           headerShadowVisible: false,
           headerTitleAlign: 'center',
-          // headerStyle: { backgroundColor: DefaultTheme.colors.background },
-          // headerStyle: { backgroundColor: 'white' },
+
           // headerTintColor: 'white',
         }}
       >
@@ -67,4 +61,13 @@ function App() {
     </NavigationContainer>
   );
 }
+
+function App() {
+  return (
+    <Provider store={store}>
+      <Index />
+    </Provider>
+  );
+}
+
 export default App;
