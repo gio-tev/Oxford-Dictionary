@@ -1,13 +1,18 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-// import { colors } from '../utils/colors';
+import { useSelector } from 'react-redux';
+
+import Results from '../components/Results';
 
 const Favorites = () => {
-  const { colors } = useTheme();
+  const { favorites } = useSelector(state => state.data);
+  const { darkMode } = useSelector(state => state.theme);
+
+  const color = darkMode ? 'white' : 'black';
 
   return (
     <View style={styles.container}>
-      <Text style={{ color: colors.text }}>Favorites</Text>
+      {favorites.length === 0 && <Text style={[styles.noFavs, { color }]}>Nothing found</Text>}
+      {favorites.length > 0 && <Results data={favorites} />}
     </View>
   );
 };
@@ -16,10 +21,9 @@ export default Favorites;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // backgroundColor: colors.primaryBlack,
+    alignItems: 'center',
   },
-  text: {
-    // color: colors.primaryCream,
+  noFavs: {
+    marginTop: 60,
   },
 });

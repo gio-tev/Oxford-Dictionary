@@ -14,7 +14,7 @@ import Button from './src/components/UI/Button';
 const Stack = createStackNavigator();
 
 function Index() {
-  const darkMode = useSelector(state => state.darkMode);
+  const darkMode = useSelector(state => state.theme.darkMode);
   const dispatch = useDispatch();
 
   const modeIcon = (
@@ -31,7 +31,7 @@ function Index() {
 
       <Stack.Navigator
         screenOptions={{
-          title: 'Dictionary',
+          title: 'Oxford Dictionary',
           headerRight: () => {
             return (
               <Button
@@ -46,12 +46,12 @@ function Index() {
           },
           headerStyle: {
             height: 150,
-            // backgroundColor: DefaultTheme.colors.,
+            // backgroundColor: DefaultTheme.colors.card,
           },
+          headerBackTitleVisible: false,
           headerShadowVisible: false,
           headerTitleAlign: 'center',
-
-          // headerTintColor: 'white',
+          headerTintColor: darkMode ? 'white' : 'black',
         }}
       >
         <Stack.Screen name="TabNavigator" component={TabNavigator} />

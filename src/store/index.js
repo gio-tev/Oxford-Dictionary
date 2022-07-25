@@ -12,10 +12,56 @@ const themeSlice = createSlice({
   },
 });
 
+const initialDataState = {
+  searchData: [],
+  noResults: false,
+  favorites: [],
+};
+
+const dataSlice = createSlice({
+  name: 'data',
+  initialState: initialDataState,
+  reducers: {
+    setSearchData(state, action) {
+      state.searchData = action.payload;
+    },
+    setNoResults(state, action) {
+      state.noResults = action.payload;
+    },
+    setFavIconPressed(state, action) {
+      state.searchData = state.searchData.map(item => {
+        if (item.word === action.payload)
+          return {
+            favIconPressed: !item.favIconPressed,
+            word: item.word,
+          };
+        else return item;
+      });
+    },
+    setFavorites(state, action) {
+      // const sameItem = state.favorites.some(item => item === action.payload);
+
+      // if (!sameItem) state.favorites.push(action.payload);
+      // else state.favorites = state.favorites.filter(word => word !== action.payload);
+      // console.log(state.favorites, 'favs');
+
+      const sameItem = state.favorites.some(item => item.word === action.payload.word);
+
+      if (!sameItem) state.favorites.push({ word: action.payload.word, favIconPressed: true });
+      else state.favorites = state.favorites.filter(item => item.word !== action.payload.word);
+      console.log(state.favorites, 'favs');
+    },
+  },
+});
+
 const store = configureStore({
-  reducer: themeSlice.reducer,
+  reducer: {
+    theme: themeSlice.reducer,
+    data: dataSlice.reducer,
+  },
 });
 
 export const themeActions = themeSlice.actions;
+export const dataActions = dataSlice.actions;
 
 export default store;
