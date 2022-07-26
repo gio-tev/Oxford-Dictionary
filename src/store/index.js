@@ -6,6 +6,9 @@ const themeSlice = createSlice({
   name: 'theme',
   initialState: initialThemeState,
   reducers: {
+    setAsyncStorageThemeState(state, action) {
+      state.darkMode = action.payload;
+    },
     toggleMode(state) {
       state.darkMode = !state.darkMode;
     },

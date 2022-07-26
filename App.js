@@ -6,13 +6,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as SplashScreen from 'expo-splash-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import store from './src/store';
 import { themeActions, dataActions } from './src/store';
-import { DefaultTheme, DarkTheme } from './src/utils/colors';
 import WordDetails from './src/screens/WordDetails';
 import TabNavigator from './src/screens/TabNavigator';
 import Button from './src/components/UI/Button';
+import { DefaultTheme, DarkTheme } from './src/utils/colors';
 import { init, fetchFavorites } from './src/utils/database';
 
 const Stack = createStackNavigator();
@@ -21,11 +22,58 @@ function Index() {
   const darkMode = useSelector(state => state.theme.darkMode);
   const dispatch = useDispatch();
 
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  // useEffect(() => {
+  //   init()
+  //     .then(() => setDbInitialized(true))
+  //     .catch(error => console.log(error));
+  //   }, []);
+
   useEffect(() => {
-    fetchFavorites()
-      .then(response => dispatch(dataActions.setDatabaseFavorites(response)))
-      .catch(error => console.log(error));
+    const initAndGetData = async () => {
+      try {
+        await init();
+
+        const response = await fetchFavorites();
+        dispatch(dataActions.setDatabaseFavorites(response));
+
+        const value = await AsyncStorage.getItem('theme');
+
+        if (value !== null) {
+          dispatch(themeActions.setAsyncStorageThemeState(JSON.parse(value)));
+          setAppIsReady(true);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    initAndGetData();
   }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
+
+  const handleThemeChangePress = () => {
+    dispatch(themeActions.toggleMode());
+
+    const storeData = async value => {
+      try {
+        await AsyncStorage.setItem('theme', JSON.stringify(!value));
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    storeData(darkMode);
+  };
 
   const modeIcon = (
     <MaterialCommunityIcons
@@ -36,70 +84,49 @@ function Index() {
   );
 
   return (
-    <NavigationContainer theme={darkMode ? DarkTheme : DefaultTheme}>
-      <StatusBar style={darkMode ? 'light' : 'dark'} />
+    <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+      <NavigationContainer theme={darkMode ? DarkTheme : DefaultTheme}>
+        <StatusBar style={darkMode ? 'light' : 'dark'} />
 
-      <Stack.Navigator
-        screenOptions={{
-          title: 'Oxford Dictionary',
-          headerRight: () => {
-            return (
-              <Button
-                pressable={({ pressed }) => [
-                  { marginRight: 15 },
-                  pressed && { transform: [{ scale: 1.2 }] },
-                ]}
-                onPress={() => dispatch(themeActions.toggleMode())}
-                icon={modeIcon}
-              />
-            );
-          },
-          headerStyle: {
-            height: 130,
-            // backgroundColor: DefaultTheme.colors.card,
-          },
-          headerBackTitleVisible: false,
-          headerShadowVisible: false,
-          headerTitleAlign: 'center',
-          headerTintColor: darkMode ? 'white' : 'black',
-        }}
-      >
-        <Stack.Screen name="TabNavigator" component={TabNavigator} />
+        <Stack.Navigator
+          screenOptions={{
+            title: 'Oxford Dictionary',
+            headerRight: () => {
+              return (
+                <Button
+                  pressable={({ pressed }) => [
+                    { marginRight: 15 },
+                    pressed && { transform: [{ scale: 1.2 }] },
+                  ]}
+                  onPress={handleThemeChangePress}
+                  icon={modeIcon}
+                />
+              );
+            },
+            headerStyle: {
+              height: 130,
+              // backgroundColor: DefaultTheme.colors.card,
+            },
+            headerBackTitleVisible: false,
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTintColor: darkMode ? 'white' : 'black',
+          }}
+        >
+          <Stack.Screen name="TabNavigator" component={TabNavigator} />
 
-        <Stack.Screen name="WordDetails" component={WordDetails} />
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen name="WordDetails" component={WordDetails} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </View>
   );
 }
 
 function App() {
-  const [dbInitialized, setDbInitialized] = useState(false);
-
-  useEffect(() => {
-    // const initAndFetchData =async() => {
-    //   await init()
-    // }
-    init()
-      .then(() => setDbInitialized(true))
-      .catch(error => console.log(error));
-  }, []);
-
-  const onLayoutRootView = useCallback(async () => {
-    if (dbInitialized) {
-      await SplashScreen.hideAsync();
-    }
-  }, [dbInitialized]);
-
-  if (!dbInitialized) {
-    return null;
-  }
-
   return (
-    <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-      <Provider store={store}>
-        <Index />
-      </Provider>
-    </View>
+    <Provider store={store}>
+      <Index />
+    </Provider>
   );
 }
 
