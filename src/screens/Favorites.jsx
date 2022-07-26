@@ -11,7 +11,7 @@ const Favorites = () => {
 
   return (
     <View style={styles.container}>
-      {favorites.length === 0 && <Text style={[styles.noFavs, { color }]}>Nothing found</Text>}
+      {favorites.length === 0 && <Text style={{ color, marginTop: 60 }}>Nothing found</Text>}
       {favorites.length > 0 && <Results data={favorites} />}
     </View>
   );
@@ -22,8 +22,5 @@ export default Favorites;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-  },
-  noFavs: {
-    marginTop: 60,
   },
 });

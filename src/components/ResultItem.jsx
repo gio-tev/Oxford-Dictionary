@@ -12,9 +12,11 @@ import { getAudio } from '../utils/https';
 import { showToast } from '../utils/toast';
 import { getWordDetails } from '../utils/https';
 import { dataActions } from '../store';
+import { deleteFavorite, insertFavorite } from '../utils/database';
 
 const ResultItem = ({ item }) => {
   const { darkMode } = useSelector(state => state.theme);
+
   const dispatch = useDispatch();
 
   const [audio, setAudio] = useState();
@@ -23,26 +25,13 @@ const ResultItem = ({ item }) => {
 
   const navigation = useNavigation();
 
-  // console.log(item, '............////////...........');
-
   useEffect(() => {
     return audio
       ? () => {
-          console.log('Unloading Sound');
           audio.unloadAsync();
         }
       : undefined;
   }, [audio]);
-
-  const handleWordPress = async () => {
-    setIsLoading(true);
-
-    const data = await getWordDetails(item.word);
-
-    if (!data.error) navigation.navigate('WordDetails', { data });
-
-    setIsLoading(false);
-  };
 
   const handleAudioPress = async () => {
     setAudioPressed(true);
@@ -64,14 +53,32 @@ const ResultItem = ({ item }) => {
     setAudioPressed(false);
   };
 
-  const handleFavoritesPress = async () => {
+  const handleFavoritesPress = () => {
     dispatch(dataActions.setFavIconPressed(item.word));
 
-    // dispatch(dataActions.setFavorites(item.word));
+    if (!item.favIconPressed) {
+      insertFavorite({
+        word: item.word,
+        favIconPressed: true,
+      });
+    } else {
+      deleteFavorite(item.word);
+    }
+
     dispatch(dataActions.setFavorites(item));
   };
 
-  const borderBottomColor = darkMode ? colors.darkGrey : colors.lightGrey;
+  const handleWordPress = async () => {
+    setIsLoading(true);
+
+    const data = await getWordDetails(item.word);
+
+    if (!data.error) navigation.navigate('WordDetails', { data, item });
+
+    setIsLoading(false);
+  };
+
+  const borderBottomColor = darkMode ? colors.mediumGrey : colors.lightGrey;
 
   const starIcon = (
     <FontAwesome
@@ -117,7 +124,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.25,
     // borderStyle: 'dotted',
     paddingHorizontal: 5,
-    marginVertical: 2.5,
+    marginVertical: 2,
     // marginBottom: 5,
   },
   btnIndicatorContainer: {

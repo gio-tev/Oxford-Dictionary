@@ -1,40 +1,38 @@
 import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
 
 import ResultItem from './ResultItem';
 
-const Results = ({ data, noResults }) => (
-  <View style={styles.container}>
-    {!noResults && data.length > 0 && (
-      <FlatList
-        data={data}
-        renderItem={({ item }) => <ResultItem item={item} />}
-        keyExtractor={item => item.word}
-        showsVerticalScrollIndicator={false}
-        overScrollMode="never"
-      />
-    )}
+const Results = ({ data, noResults }) => {
+  const { darkMode } = useSelector(state => state.theme);
 
-    {noResults && <Text style={styles.text}>Nothing found</Text>}
-  </View>
-);
+  const color = darkMode ? 'white' : 'black';
+
+  return (
+    <View style={styles.container}>
+      {!noResults && data.length > 0 && (
+        <FlatList
+          data={data}
+          renderItem={({ item }) => <ResultItem item={item} />}
+          keyExtractor={item => item.word}
+          keyboardDismissMode="on-drag"
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+
+      {noResults && <Text style={[styles.text, { color, marginTop: 40 }]}>Nothing found</Text>}
+    </View>
+  );
+};
 
 export default Results;
 
 const styles = StyleSheet.create({
   container: {
-    // borderTopColor: 'grey',
-    // borderTopWidth: 0.3,
-    // borderStyle: 'dotted',
-    // backgroundColor: '#EBEEF2',
-    borderRadius: 5,
+    alignItems: 'center',
     width: '90%',
     height: '90%',
     marginTop: 10,
-    // marginBottom: 60,
-    alignItems: 'center',
-    // paddingHorizontal: 10,
-  },
-  text: {
-    // color: colors.primaryCream,
+    borderRadius: 5,
   },
 });

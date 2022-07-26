@@ -9,9 +9,10 @@ import { searchWords } from '../utils/https';
 import { dataActions } from '../store';
 
 const Search = () => {
-  const darkMode = useSelector(state => state.theme.darkMode);
-  const noResults = useSelector(state => state.data.noResults);
-  const searchData = useSelector(state => state.data.searchData);
+  const { darkMode } = useSelector(state => state.theme);
+  const { noResults } = useSelector(state => state.data);
+  const { favorites } = useSelector(state => state.data);
+
   const dispatch = useDispatch();
 
   const [text, setText] = useState('');
@@ -19,9 +20,7 @@ const Search = () => {
 
   const handleInput = input => {
     if (input.length === 0) dispatch(dataActions.setSearchData([]));
-
     if (noResults) dispatch(dataActions.setNoResults(false));
-
     setText(input.trim());
   };
 
@@ -32,6 +31,7 @@ const Search = () => {
       if (!data.error) {
         if (data.results.length === 0) {
           dispatch(dataActions.setSearchData(data.results));
+
           return dispatch(dataActions.setNoResults(true));
         }
 
@@ -46,28 +46,33 @@ const Search = () => {
             };
           });
 
-        // console.log(searchResults);
+        const modifiedSearchWords = searchResults.reduce((acc, curr) => {
+          const sameItem = favorites.find(fav => fav.word === curr.word);
 
-        dispatch(dataActions.setSearchData(searchResults));
+          if (sameItem) acc.push(sameItem);
+          else acc.push(curr);
+          return acc;
+        }, []);
+
+        dispatch(dataActions.setSearchData(modifiedSearchWords));
       }
     };
     fetchWords();
   }, [value]);
 
+  const backgroundColor = darkMode ? colors.primaryGrey : colors.inputLightBg;
+  const color = darkMode ? 'white' : 'black';
+
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: darkMode ? colors.primaryGrey : colors.inputLightBg },
-      ]}
-    >
+    <View style={[styles.container, { backgroundColor }]}>
       <Ionicons style={styles.searchIcon} name="search" size={24} color={colors.primarySky} />
+
       <TextInput
-        style={[styles.input, { color: darkMode ? 'white' : 'black' }]}
+        style={[styles.input, { color }]}
         onChangeText={handleInput}
         placeholder="Search..."
-        placeholderTextColor={darkMode ? 'white' : 'black'}
-        selectionColor={darkMode ? 'white' : 'black'}
+        placeholderTextColor={color}
+        selectionColor={color}
         autoCapitalize="none"
       />
     </View>
@@ -80,12 +85,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    // backgroundColor: '#EBEEF2',
-    // backgroundColor: 'white',
     width: '90%',
     borderRadius: 5,
-    // paddingVertical: 5,
-    // marginBottom: 50,
   },
   searchIcon: {
     paddingLeft: 15,

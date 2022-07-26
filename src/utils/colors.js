@@ -1,8 +1,10 @@
 export const colors = {
   primaryBlack: '#181818',
   lightBlack: '#282828',
-  primarySky: '#38b6ff',
+  // primarySky: '#38b6ff',
+  primarySky: '#61C8EC',
   primaryGrey: '#707070',
+  mediumGrey: '#404040',
   lightGrey: '#E0E0E0',
   darkGrey: '#585858',
   // primaryWhite: 'white',

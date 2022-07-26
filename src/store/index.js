@@ -39,17 +39,13 @@ const dataSlice = createSlice({
       });
     },
     setFavorites(state, action) {
-      // const sameItem = state.favorites.some(item => item === action.payload);
-
-      // if (!sameItem) state.favorites.push(action.payload);
-      // else state.favorites = state.favorites.filter(word => word !== action.payload);
-      // console.log(state.favorites, 'favs');
-
       const sameItem = state.favorites.some(item => item.word === action.payload.word);
 
       if (!sameItem) state.favorites.push({ word: action.payload.word, favIconPressed: true });
       else state.favorites = state.favorites.filter(item => item.word !== action.payload.word);
-      console.log(state.favorites, 'favs');
+    },
+    setDatabaseFavorites(state, action) {
+      state.favorites = action.payload;
     },
   },
 });

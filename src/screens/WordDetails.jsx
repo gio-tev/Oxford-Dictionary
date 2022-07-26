@@ -1,21 +1,25 @@
 import { useState, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Audio } from 'expo-av';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-import { wordVariables } from '../utils/variables';
+import { dataActions } from '../store';
 import Button from '../components/UI/Button';
+import { wordVariables } from '../utils/variables';
 import { colors } from '../utils/colors';
+import { showToast } from '../utils/toast';
 
 const WordDetails = ({ route }) => {
   const { darkMode } = useSelector(state => state.theme);
+  const { searchData } = useSelector(state => state.data);
+  const dispatch = useDispatch();
 
   const [audio, setAudio] = useState();
   const [audioPressed, setAudioPressed] = useState(false);
 
-  const { data } = route.params;
+  const { data, item } = route.params;
 
   const {
     word,
@@ -32,7 +36,6 @@ const WordDetails = ({ route }) => {
   useEffect(() => {
     return audio
       ? () => {
-          console.log('Unloading Sound');
           audio.unloadAsync();
         }
       : undefined;
@@ -41,14 +44,27 @@ const WordDetails = ({ route }) => {
   const handleAudioPress = async () => {
     setAudioPressed(true);
 
-    const { sound } = await Audio.Sound.createAsync({
-      uri: audioUri,
-    });
+    if (!audioUri || audioUri.error) {
+      showToast('No audio');
+      setAudioPressed(false);
+      return;
+    }
 
-    setAudio(sound);
+    if (audioUri) {
+      const { sound } = await Audio.Sound.createAsync({
+        uri: audioUri,
+      });
 
-    await sound.playAsync();
+      setAudio(sound);
+
+      await sound.playAsync();
+    }
     setAudioPressed(false);
+  };
+
+  const handleFavoritesPress = () => {
+    dispatch(dataActions.setFavIconPressed(item.word));
+    dispatch(dataActions.setFavorites(item));
   };
 
   const color = darkMode ? 'white' : 'black';
@@ -56,17 +72,24 @@ const WordDetails = ({ route }) => {
   const synonymsBg = darkMode ? colors.lightBlack : colors.inputLightBg;
   const borderWidth = darkMode ? 0.25 : 0.4;
 
-  const starIcon = <FontAwesome name="star-o" size={22} color={colors.primaryGrey} />;
+  const currentPressedState = searchData.filter(el => el.word === item.word);
+
+  const starIcon = (
+    <FontAwesome
+      name={currentPressedState[0].favIconPressed ? 'star' : 'star-o'}
+      size={22}
+      color={colors.primaryGrey}
+    />
+  );
   const audioIcon = (
     <AntDesign name="sound" size={20} color={audioPressed ? 'grey' : colors.primarySky} />
   );
 
   return (
-    // <View style={{ flex: 1, alignItems: 'center' }}>
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.innerContainer}>
         <Text style={{ color }}>{dialect}</Text>
-        <Button pressable={styles.btn} icon={starIcon} />
+        <Button pressable={styles.btn} icon={starIcon} onPress={handleFavoritesPress} />
       </View>
 
       <View style={styles.innerContainer}>
@@ -114,7 +137,6 @@ const WordDetails = ({ route }) => {
         </View>
       )}
     </ScrollView>
-    // {/* </View> */}
   );
 };
 
@@ -122,21 +144,24 @@ export default WordDetails;
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
     alignItems: 'center',
+    paddingTop: 10,
   },
   innerContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    // alignItems: 'flex-end',
     width: '85%',
     marginVertical: 8,
   },
   word: {
     fontSize: 35,
-    marginRight: 10,
+    marginRight: 15,
   },
   btn: {
-    marginLeft: 10,
+    marginLeft: 15,
+    // marginBottom: 20,
+    // borderWidth: 1,
+    transform: [{ translateY: -10 }],
   },
   fieldSet: {
     marginTop: 40,
@@ -146,7 +171,8 @@ const styles = StyleSheet.create({
     padding: 20,
     // paddingTop: 20,
     // paddingBottom: 30,
-    borderColor: colors.primarySky,
+    borderColor: colors.primarySky, //////////////////////////////////////
+    borderColor: 'grey',
     marginBottom: 30,
     borderRadius: 20,
   },
