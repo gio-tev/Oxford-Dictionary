@@ -1,3 +1,5 @@
+import { API_KEY, APP_ID } from '@env';
+
 export const searchWords = async word => {
   try {
     const response = await fetch(
@@ -5,8 +7,8 @@ export const searchWords = async word => {
       {
         headers: {
           Accept: 'application/json',
-          app_id: 'd7207d6d',
-          app_key: 'efac260b8839efc10ab816045dd07046',
+          app_id: APP_ID,
+          app_key: API_KEY,
         },
       }
     );
@@ -25,8 +27,8 @@ export const getAudio = async word => {
       {
         headers: {
           Accept: 'application/json',
-          app_id: 'd7207d6d',
-          app_key: 'efac260b8839efc10ab816045dd07046',
+          app_id: APP_ID,
+          app_key: API_KEY,
         },
       }
     );
@@ -54,8 +56,8 @@ export const getWordDetails = async word => {
       {
         headers: {
           Accept: 'application/json',
-          app_id: 'd7207d6d',
-          app_key: 'efac260b8839efc10ab816045dd07046',
+          app_id: APP_ID,
+          app_key: API_KEY,
         },
       }
     );
