@@ -10,10 +10,12 @@ import Button from '../components/UI/Button';
 import { wordVariables } from '../utils/variables';
 import { colors } from '../utils/colors';
 import { showToast } from '../utils/toast';
+import { insertFavorite, deleteFavorite } from '../utils/database';
 
 const WordDetails = ({ route }) => {
   const { darkMode } = useSelector(state => state.theme);
   const { searchData } = useSelector(state => state.data);
+  const { favorites } = useSelector(state => state.data);
   const dispatch = useDispatch();
 
   const [audio, setAudio] = useState();
@@ -64,6 +66,16 @@ const WordDetails = ({ route }) => {
 
   const handleFavoritesPress = () => {
     dispatch(dataActions.setFavIconPressed(item.word));
+
+    if (!item.favIconPressed) {
+      insertFavorite({
+        word: item.word,
+        favIconPressed: true,
+      });
+    } else {
+      deleteFavorite(item.word);
+    }
+
     dispatch(dataActions.setFavorites(item));
   };
 
@@ -72,11 +84,18 @@ const WordDetails = ({ route }) => {
   const synonymsBg = darkMode ? colors.lightBlack : colors.inputLightBg;
   const borderWidth = darkMode ? 0.25 : 0.4;
 
-  const currentPressedState = searchData.filter(el => el.word === item.word);
+  const currentSearchDataState = searchData.filter(el => el.word === item.word);
+  const currentFavoritesState = favorites.filter(el => el.word === item.word);
 
   const starIcon = (
     <FontAwesome
-      name={currentPressedState[0].favIconPressed ? 'star' : 'star-o'}
+      name={
+        currentSearchDataState[0] && currentSearchDataState[0].favIconPressed
+          ? 'star'
+          : currentFavoritesState[0] && currentFavoritesState[0].favIconPressed
+          ? 'star'
+          : 'star-o'
+      }
       size={22}
       color={colors.primaryGrey}
     />
@@ -149,7 +168,6 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flexDirection: 'row',
-    // alignItems: 'flex-end',
     width: '85%',
     marginVertical: 8,
   },
@@ -159,19 +177,12 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginLeft: 15,
-    // marginBottom: 20,
-    // borderWidth: 1,
     transform: [{ translateY: -10 }],
   },
   fieldSet: {
     marginTop: 40,
     width: '90%',
-    // paddingTop: 20,
-    // paddingHorizontal: 20,
     padding: 20,
-    // paddingTop: 20,
-    // paddingBottom: 30,
-    borderColor: colors.primarySky, //////////////////////////////////////
     borderColor: 'grey',
     marginBottom: 30,
     borderRadius: 20,
@@ -183,8 +194,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 16,
     paddingHorizontal: 15,
-    // paddingBottom: 15,
-    // padding: 10,
   },
   synonymsContainer: {
     flexDirection: 'row',
