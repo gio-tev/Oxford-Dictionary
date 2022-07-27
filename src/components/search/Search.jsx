@@ -4,11 +4,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
 import { useDebounce } from 'use-debounce';
 
-import { colors } from '../utils/colors';
-import { searchWords } from '../utils/https';
-import { dataActions } from '../store';
+import { colors } from '../../utils/colors';
+import { searchWords } from '../../utils/https';
+import { dataActions } from '../../store';
+import getStyles from './styles';
 
 const Search = () => {
+  const styles = getStyles();
+
   const { darkMode } = useSelector(state => state.theme);
   const { noResults } = useSelector(state => state.data);
   const { favorites } = useSelector(state => state.data);
@@ -80,21 +83,3 @@ const Search = () => {
 };
 
 export default Search;
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '90%',
-    borderRadius: 5,
-  },
-  searchIcon: {
-    paddingLeft: 15,
-    width: '15%',
-  },
-  input: {
-    borderRadius: 5,
-    height: 45,
-    width: '85%',
-  },
-});

@@ -1,7 +1,7 @@
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import ResultItem from './ResultItem';
+import ResultItem from './result-item/ResultItem';
 
 const Results = ({ data, noResults }) => {
   const { darkMode } = useSelector(state => state.theme);

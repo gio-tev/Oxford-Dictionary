@@ -1,22 +1,24 @@
 import { useState, useEffect } from 'react';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 
-import Button from './UI/Button';
-import { colors } from '../utils/colors';
-import { getAudio } from '../utils/https';
-import { showToast } from '../utils/toast';
-import { getWordDetails } from '../utils/https';
-import { dataActions } from '../store';
-import { deleteFavorite, insertFavorite } from '../utils/database';
+import getStyles from './styles';
+import { dataActions } from '../../../store';
+import Button from '../../UI/Button';
+import { colors } from '../../../utils/colors';
+import { getAudio } from '../../../utils/https';
+import { showToast } from '../../../utils/toast';
+import { getWordDetails } from '../../../utils/https';
+import { deleteFavorite, insertFavorite } from '../../../utils/database';
 
 const ResultItem = ({ item }) => {
-  const { darkMode } = useSelector(state => state.theme);
+  const styles = getStyles();
 
+  const { darkMode } = useSelector(state => state.theme);
   const dispatch = useDispatch();
 
   const [audio, setAudio] = useState();
@@ -113,37 +115,3 @@ const ResultItem = ({ item }) => {
 };
 
 export default ResultItem;
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    // borderBottomColor: colors.primaryGrey,
-    // borderBottomColor: '#E0E0E0',
-    borderBottomWidth: 0.25,
-    // borderStyle: 'dotted',
-    paddingHorizontal: 5,
-    marginVertical: 2,
-    // marginBottom: 5,
-  },
-  btnIndicatorContainer: {
-    flexDirection: 'row',
-    width: '82%',
-  },
-  btn: {
-    width: '86%',
-    // borderWidth: 1,
-  },
-  text: {
-    paddingVertical: 10,
-  },
-  iconsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '18%',
-  },
-  pressed: {
-    transform: [{ scale: 0.98 }],
-  },
-});

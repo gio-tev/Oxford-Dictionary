@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import Results from '../components/Results';
+import Results from '../../components/results/Results';
 
 const Favorites = () => {
   const { favorites } = useSelector(state => state.data);
@@ -10,7 +10,7 @@ const Favorites = () => {
   const color = darkMode ? 'white' : 'black';
 
   return (
-    <View style={styles.container}>
+    <View style={{ alignItems: 'center' }}>
       {favorites.length === 0 && <Text style={{ color, marginTop: 60 }}>Nothing found</Text>}
       {favorites.length > 0 && <Results data={favorites} />}
     </View>
@@ -18,9 +18,3 @@ const Favorites = () => {
 };
 
 export default Favorites;
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-  },
-});

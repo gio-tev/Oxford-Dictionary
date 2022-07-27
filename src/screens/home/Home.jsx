@@ -1,7 +1,7 @@
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 
-import Search from '../components/Search';
-import Results from '../components/Results';
+import Search from '../../components/search/Search';
+import Results from '../../components/results/Results';
 import { useSelector } from 'react-redux';
 
 const Home = () => {
@@ -9,7 +9,7 @@ const Home = () => {
   const { noResults } = useSelector(state => state.data);
 
   return (
-    <View style={styles.container}>
+    <View style={{ alignItems: 'center' }}>
       <Search />
       <Results data={searchData} noResults={noResults} />
     </View>
@@ -17,9 +17,3 @@ const Home = () => {
 };
 
 export default Home;
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-  },
-});

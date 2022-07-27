@@ -2,9 +2,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-import { colors } from '../utils/colors';
-import Home from './Home';
-import Favorites from './Favorites';
+import { colors } from '../../utils/colors';
+import Home from '../home/Home';
+import Favorites from '../favorites/Favorites';
 
 const Tab = createBottomTabNavigator();
 
@@ -13,15 +13,10 @@ function TabNavigator() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-
         tabBarStyle: {
-          // backgroundColor: '#F5F4F3',
           height: 60,
           borderTopWidth: 0,
           elevation: 0,
-
-          // borderWidth: 1,
-          // borderColor: 'red',
         },
         tabBarIconStyle: { marginTop: 10 },
         tabBarLabelStyle: { marginBottom: 10 },
@@ -42,11 +37,6 @@ function TabNavigator() {
         component={Favorites}
         options={{
           tabBarIcon: ({ color, size }) => <FontAwesome name="star" size={size} color={color} />,
-          // tabBarBadge: 1,
-          // tabBarBadgeStyle: {
-          //   backgroundColor: 'white',
-          //   color: 'red',
-          // },
         }}
       />
     </Tab.Navigator>

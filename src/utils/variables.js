@@ -29,7 +29,6 @@ export const wordVariables = data => {
     ? data.results[0].lexicalEntries[0].entries[0].pronunciations[0].phoneticSpelling
     : undefined;
 
-  ////////////////////////////////////////
   const synonyms = data.results[0].lexicalEntries[0].entries[0].senses
     ? data.results[0].lexicalEntries[0].entries[0].senses[0].synonyms?.map(el => el.text)
     : undefined;

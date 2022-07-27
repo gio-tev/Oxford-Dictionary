@@ -51,7 +51,6 @@ export const getAudio = async word => {
 export const getWordDetails = async word => {
   try {
     const response = await fetch(
-      // `https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/${word}?fields=pronunciations,definitions,examples,etymologies&strictMatch=false`,
       `https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/${word}?strictMatch=false`,
       {
         headers: {

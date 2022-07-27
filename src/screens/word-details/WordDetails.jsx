@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react';
-import { ScrollView, View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Audio } from 'expo-av';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-import { dataActions } from '../store';
-import Button from '../components/UI/Button';
-import { wordVariables } from '../utils/variables';
-import { colors } from '../utils/colors';
-import { showToast } from '../utils/toast';
-import { insertFavorite, deleteFavorite } from '../utils/database';
+import { dataActions } from '../../store';
+import Button from '../../components/UI/Button';
+import { wordVariables } from '../../utils/variables';
+import { colors } from '../../utils/colors';
+import { showToast } from '../../utils/toast';
+import { insertFavorite, deleteFavorite } from '../../utils/database';
+import getStyles from './styles';
 
 const WordDetails = ({ route }) => {
+  const styles = getStyles();
+
   const { darkMode } = useSelector(state => state.theme);
   const { searchData } = useSelector(state => state.data);
   const { favorites } = useSelector(state => state.data);
@@ -145,10 +148,7 @@ const WordDetails = ({ route }) => {
 
           <View style={styles.synonymsContainer}>
             {synonyms.map(syn => (
-              <View
-                style={[styles.synonym, { backgroundColor: synonymsBg }]}
-                key={Date.now() * Math.random()}
-              >
+              <View style={[styles.synonym, { backgroundColor: synonymsBg }]} key={syn}>
                 <Text style={{ color }}>{syn}</Text>
               </View>
             ))}
@@ -160,50 +160,3 @@ const WordDetails = ({ route }) => {
 };
 
 export default WordDetails;
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    paddingTop: 10,
-  },
-  innerContainer: {
-    flexDirection: 'row',
-    width: '85%',
-    marginVertical: 8,
-  },
-  word: {
-    fontSize: 35,
-    marginRight: 15,
-  },
-  btn: {
-    marginLeft: 15,
-    transform: [{ translateY: -10 }],
-  },
-  fieldSet: {
-    marginTop: 40,
-    width: '90%',
-    padding: 20,
-    borderColor: 'grey',
-    marginBottom: 30,
-    borderRadius: 20,
-  },
-  legend: {
-    position: 'absolute',
-    top: -12,
-    left: 10,
-    fontWeight: '500',
-    fontSize: 16,
-    paddingHorizontal: 15,
-  },
-  synonymsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-  },
-  synonym: {
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    margin: 5,
-  },
-});
