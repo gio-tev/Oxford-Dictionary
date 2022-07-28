@@ -20,7 +20,7 @@ const Results = ({ data, noResults }) => {
         />
       )}
 
-      {noResults && <Text style={[styles.text, { color, marginTop: 40 }]}>Nothing found</Text>}
+      {noResults && <Text style={{ color, marginTop: 40 }}>Nothing found</Text>}
     </View>
   );
 };

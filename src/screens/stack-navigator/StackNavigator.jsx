@@ -32,7 +32,6 @@ function StackNavigator() {
         dispatch(dataActions.setDatabaseFavorites(response));
 
         const value = await AsyncStorage.getItem('theme');
-
         if (value !== null) {
           dispatch(themeActions.setAsyncStorageThemeState(JSON.parse(value)));
           setAppIsReady(true);

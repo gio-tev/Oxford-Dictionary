@@ -23,6 +23,7 @@ function TabNavigator() {
         tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: colors.primarySky,
         tabBarInactiveTintColor: colors.primaryGrey,
+        tabBarInactiveTintColor: 'grey',
       }}
     >
       <Tab.Screen

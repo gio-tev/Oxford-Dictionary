@@ -1,28 +1,20 @@
-import { useState, useEffect } from 'react';
 import { ScrollView, View, Text } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { Audio } from 'expo-av';
+import { useSelector } from 'react-redux';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-import { dataActions } from '../../store';
+import getStyles from './styles';
 import Button from '../../components/UI/Button';
 import { wordVariables } from '../../utils/variables';
 import { colors } from '../../utils/colors';
-import { showToast } from '../../utils/toast';
-import { insertFavorite, deleteFavorite } from '../../utils/database';
-import getStyles from './styles';
+import withSharedState from '../../HOCs/withSharedState';
 
-const WordDetails = ({ route }) => {
+const WordDetails = ({ route, audioPressed, handleAudioPress, handleFavoritesPress }) => {
   const styles = getStyles();
 
   const { darkMode } = useSelector(state => state.theme);
   const { searchData } = useSelector(state => state.data);
   const { favorites } = useSelector(state => state.data);
-  const dispatch = useDispatch();
-
-  const [audio, setAudio] = useState();
-  const [audioPressed, setAudioPressed] = useState(false);
 
   const { data, item } = route.params;
 
@@ -37,50 +29,6 @@ const WordDetails = ({ route }) => {
     phoneticSpelling,
     synonyms,
   } = wordVariables(data);
-
-  useEffect(() => {
-    return audio
-      ? () => {
-          audio.unloadAsync();
-        }
-      : undefined;
-  }, [audio]);
-
-  const handleAudioPress = async () => {
-    setAudioPressed(true);
-
-    if (!audioUri || audioUri.error) {
-      showToast('No audio');
-      setAudioPressed(false);
-      return;
-    }
-
-    if (audioUri) {
-      const { sound } = await Audio.Sound.createAsync({
-        uri: audioUri,
-      });
-
-      setAudio(sound);
-
-      await sound.playAsync();
-    }
-    setAudioPressed(false);
-  };
-
-  const handleFavoritesPress = () => {
-    dispatch(dataActions.setFavIconPressed(item.word));
-
-    if (!item.favIconPressed) {
-      insertFavorite({
-        word: item.word,
-        favIconPressed: true,
-      });
-    } else {
-      deleteFavorite(item.word);
-    }
-
-    dispatch(dataActions.setFavorites(item));
-  };
 
   const color = darkMode ? 'white' : 'black';
   const legendBg = darkMode ? colors.primaryBlack : 'white';
@@ -111,7 +59,7 @@ const WordDetails = ({ route }) => {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.innerContainer}>
         <Text style={{ color }}>{dialect}</Text>
-        <Button pressable={styles.btn} icon={starIcon} onPress={handleFavoritesPress} />
+        <Button pressable={styles.btn} icon={starIcon} onPress={() => handleFavoritesPress(item)} />
       </View>
 
       <View style={styles.innerContainer}>
@@ -121,7 +69,11 @@ const WordDetails = ({ route }) => {
 
       <View style={styles.innerContainer}>
         <Text style={{ color }}> {lexicalCategory}</Text>
-        <Button pressable={styles.btn} icon={audioIcon} onPress={handleAudioPress} />
+        <Button
+          pressable={styles.btn}
+          icon={audioIcon}
+          onPress={() => handleAudioPress(null, audioUri)}
+        />
       </View>
 
       {definition && (
@@ -159,4 +111,4 @@ const WordDetails = ({ route }) => {
   );
 };
 
-export default WordDetails;
+export default withSharedState(WordDetails);

@@ -12,7 +12,8 @@ export const wordVariables = data => {
     : undefined;
 
   const audioUri =
-    data?.results[0]?.lexicalEntries[0]?.entries[0] &&
+    !data.error &&
+    data?.results[0]?.lexicalEntries[0]?.entries &&
     data?.results[0]?.lexicalEntries[0]?.entries[0]?.pronunciations
       ? data.results[0].lexicalEntries[0].entries[0].pronunciations[0].audioFile
       : undefined;
