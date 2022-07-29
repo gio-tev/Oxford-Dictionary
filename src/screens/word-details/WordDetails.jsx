@@ -9,11 +9,11 @@ import { wordVariables } from '../../utils/variables';
 import { colors } from '../../utils/colors';
 import withSharedState from '../../HOCs/withSharedState';
 
-const WordDetails = ({ route, audioPressed, handleAudioPress, handleFavoritesPress }) => {
+const WordDetails = ({ route, audioPressed, handleAudioPress, handleFavoritePress }) => {
   const styles = getStyles();
 
   const { darkMode } = useSelector(state => state.theme);
-  const { searchData } = useSelector(state => state.data);
+  const { searchedData } = useSelector(state => state.data);
   const { favorites } = useSelector(state => state.data);
 
   const { data, item } = route.params;
@@ -35,18 +35,20 @@ const WordDetails = ({ route, audioPressed, handleAudioPress, handleFavoritesPre
   const synonymsBg = darkMode ? colors.lightBlack : colors.inputLightBg;
   const borderWidth = darkMode ? 0.25 : 0.4;
 
-  const currentSearchDataState = searchData.filter(el => el.word === item.word);
-  const currentFavoritesState = favorites.filter(el => el.word === item.word);
+  const currentSearchedItemState = searchedData.filter(el => el.word === item.word)[0];
+  const currentFavoriteItemState = favorites.filter(el => el.word === item.word)[0];
+
+  const currentItemState = currentSearchedItemState
+    ? currentSearchedItemState
+    : currentFavoriteItemState;
+
+  const itemOnFavoritePress = currentItemState
+    ? currentItemState
+    : { word: item.word, favIconPressed: false };
 
   const starIcon = (
     <FontAwesome
-      name={
-        currentSearchDataState[0] && currentSearchDataState[0].favIconPressed
-          ? 'star'
-          : currentFavoritesState[0] && currentFavoritesState[0].favIconPressed
-          ? 'star'
-          : 'star-o'
-      }
+      name={currentItemState?.favIconPressed ? 'star' : 'star-o'}
       size={22}
       color={colors.primaryGrey}
     />
@@ -59,7 +61,11 @@ const WordDetails = ({ route, audioPressed, handleAudioPress, handleFavoritesPre
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.innerContainer}>
         <Text style={{ color }}>{dialect}</Text>
-        <Button pressable={styles.btn} icon={starIcon} onPress={() => handleFavoritesPress(item)} />
+        <Button
+          pressable={styles.btn}
+          icon={starIcon}
+          onPress={() => handleFavoritePress(itemOnFavoritePress)}
+        />
       </View>
 
       <View style={styles.innerContainer}>

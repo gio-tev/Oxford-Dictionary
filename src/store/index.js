@@ -16,7 +16,7 @@ const themeSlice = createSlice({
 });
 
 const initialDataState = {
-  searchData: [],
+  searchedData: [],
   noResults: false,
   favorites: [],
 };
@@ -25,14 +25,17 @@ const dataSlice = createSlice({
   name: 'data',
   initialState: initialDataState,
   reducers: {
-    setSearchData(state, action) {
-      state.searchData = action.payload;
+    setDatabaseFavorites(state, action) {
+      state.favorites = action.payload;
+    },
+    setSearchedData(state, action) {
+      state.searchedData = action.payload;
     },
     setNoResults(state, action) {
       state.noResults = action.payload;
     },
     setFavIconPressed(state, action) {
-      state.searchData = state.searchData.map(item => {
+      state.searchedData = state.searchedData.map(item => {
         if (item.word === action.payload)
           return {
             favIconPressed: !item.favIconPressed,
@@ -46,9 +49,6 @@ const dataSlice = createSlice({
 
       if (!sameItem) state.favorites.push({ word: action.payload.word, favIconPressed: true });
       else state.favorites = state.favorites.filter(item => item.word !== action.payload.word);
-    },
-    setDatabaseFavorites(state, action) {
-      state.favorites = action.payload;
     },
   },
 });

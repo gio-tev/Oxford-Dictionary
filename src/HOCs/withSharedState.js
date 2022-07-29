@@ -40,7 +40,7 @@ const withSharedState = WrappedComponent => {
       setAudioPressed(false);
     };
 
-    const handleFavoritesPress = item => {
+    const handleFavoritePress = item => {
       dispatch(dataActions.setFavIconPressed(item.word));
 
       if (!item.favIconPressed) {
@@ -60,7 +60,7 @@ const withSharedState = WrappedComponent => {
         {...props}
         audioPressed={audioPressed}
         handleAudioPress={handleAudioPress}
-        handleFavoritesPress={handleFavoritesPress}
+        handleFavoritePress={handleFavoritePress}
       />
     );
   };

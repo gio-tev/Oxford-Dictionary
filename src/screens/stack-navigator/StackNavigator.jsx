@@ -9,8 +9,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { themeActions, dataActions } from '../../store';
-import WordDetails from '../word-details/WordDetails';
 import TabNavigator from '../tab-navigator/TabNavigator';
+import WordDetails from '../word-details/WordDetails';
 import Button from '../../components/UI/Button';
 import { DefaultTheme, DarkTheme } from '../../utils/colors';
 import { init, fetchFavorites } from '../../utils/database';
@@ -34,6 +34,7 @@ function StackNavigator() {
         const value = await AsyncStorage.getItem('theme');
         if (value !== null) {
           dispatch(themeActions.setAsyncStorageThemeState(JSON.parse(value)));
+
           setAppIsReady(true);
         }
       } catch (error) {
@@ -60,6 +61,7 @@ function StackNavigator() {
         console.log(e);
       }
     };
+
     storeData(darkMode);
   };
 

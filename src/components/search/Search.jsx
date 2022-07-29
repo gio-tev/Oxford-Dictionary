@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, TextInput } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
 import { useDebounce } from 'use-debounce';
@@ -22,45 +22,39 @@ const Search = () => {
   const [value] = useDebounce(text, 500);
 
   const handleInput = input => {
-    if (input.length === 0) dispatch(dataActions.setSearchData([]));
+    if (input.length === 0) dispatch(dataActions.setSearchedData([]));
     if (noResults) dispatch(dataActions.setNoResults(false));
     setText(input.trim());
   };
 
   useEffect(() => {
-    const fetchWords = async () => {
-      const data = await searchWords(value);
+    const getWords = async inputValue => {
+      const data = await searchWords(inputValue);
 
       if (!data.error) {
         if (data.results.length === 0) {
-          dispatch(dataActions.setSearchData(data.results));
+          dispatch(dataActions.setSearchedData(data.results));
 
           return dispatch(dataActions.setNoResults(true));
         }
 
         const searchResults = data.results
-          .map(el => el.word)
-          .filter(el => el.length < 15)
-          .sort((a, b) => (a === value && -1) || (b === value && 1) || 0)
+          .filter(el => el.word.length < 15)
           .map(el => {
-            return {
-              word: el,
-              favIconPressed: false,
-            };
-          });
+            return { word: el.word, favIconPressed: false };
+          })
+          .reduce((acc, curr) => {
+            const sameItem = favorites.find(fav => fav.word === curr.word);
 
-        const modifiedSearchWords = searchResults.reduce((acc, curr) => {
-          const sameItem = favorites.find(fav => fav.word === curr.word);
+            if (sameItem) acc.push(sameItem);
+            else acc.push(curr);
+            return acc;
+          }, []);
 
-          if (sameItem) acc.push(sameItem);
-          else acc.push(curr);
-          return acc;
-        }, []);
-
-        dispatch(dataActions.setSearchData(modifiedSearchWords));
+        dispatch(dataActions.setSearchedData(searchResults));
       }
     };
-    fetchWords();
+    getWords(value);
   }, [value]);
 
   const backgroundColor = darkMode ? colors.primaryGrey : colors.inputLightBg;

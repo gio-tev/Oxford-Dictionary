@@ -5,13 +5,13 @@ import Results from '../../components/results/Results';
 import { useSelector } from 'react-redux';
 
 const Home = () => {
-  const { searchData } = useSelector(state => state.data);
+  const { searchedData } = useSelector(state => state.data);
   const { noResults } = useSelector(state => state.data);
 
   return (
     <View style={{ alignItems: 'center' }}>
       <Search />
-      <Results data={searchData} noResults={noResults} />
+      <Results data={searchedData} noResults={noResults} />
     </View>
   );
 };

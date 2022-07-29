@@ -11,7 +11,7 @@ import { colors } from '../../../utils/colors';
 import { getWordDetails } from '../../../utils/https';
 import withSharedState from '../../../HOCs/withSharedState';
 
-const ResultItem = ({ item, audioPressed, handleAudioPress, handleFavoritesPress }) => {
+const ResultItem = ({ item, audioPressed, handleAudioPress, handleFavoritePress }) => {
   const styles = getStyles();
 
   const { darkMode } = useSelector(state => state.theme);
@@ -55,7 +55,7 @@ const ResultItem = ({ item, audioPressed, handleAudioPress, handleFavoritesPress
 
       <View style={styles.iconsContainer}>
         <Button icon={audioIcon} onPress={() => handleAudioPress(item.word)} />
-        <Button icon={starIcon} onPress={() => handleFavoritesPress(item)} />
+        <Button icon={starIcon} onPress={() => handleFavoritePress(item)} />
       </View>
     </View>
   );
