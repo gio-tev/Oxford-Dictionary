@@ -30,11 +30,6 @@ const WordDetails = ({ route, audioPressed, handleAudioPress, handleFavoritePres
     synonyms,
   } = wordVariables(data);
 
-  const color = darkMode ? 'white' : 'black';
-  const legendBg = darkMode ? colors.primaryBlack : 'white';
-  const synonymsBg = darkMode ? colors.lightBlack : colors.inputLightBg;
-  const borderWidth = darkMode ? 0.25 : 0.4;
-
   const currentSearchedItemState = searchedData.filter(el => el.word === item.word)[0];
   const currentFavoriteItemState = favorites.filter(el => el.word === item.word)[0];
 
@@ -45,6 +40,11 @@ const WordDetails = ({ route, audioPressed, handleAudioPress, handleFavoritePres
   const itemOnFavoritePress = currentItemState
     ? currentItemState
     : { word: item.word, favIconPressed: false };
+
+  const color = darkMode ? 'white' : 'black';
+  const legendBg = darkMode ? colors.primaryBlack : 'white';
+  const synonymsBg = darkMode ? colors.lightBlack : colors.inputLightBg;
+  const borderWidth = darkMode ? 0.25 : 0.4;
 
   const starIcon = (
     <FontAwesome

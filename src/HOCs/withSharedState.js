@@ -41,17 +41,14 @@ const withSharedState = WrappedComponent => {
     };
 
     const handleFavoritePress = item => {
-      dispatch(dataActions.setFavIconPressed(item.word));
-
       if (!item.favIconPressed) {
         insertFavorite({
           word: item.word,
           favIconPressed: true,
         });
-      } else {
-        deleteFavorite(item.word);
-      }
+      } else deleteFavorite(item.word);
 
+      dispatch(dataActions.updateSearchedData(item.word));
       dispatch(dataActions.setFavorites(item));
     };
 

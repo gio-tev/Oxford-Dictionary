@@ -34,7 +34,7 @@ const dataSlice = createSlice({
     setNoResults(state, action) {
       state.noResults = action.payload;
     },
-    setFavIconPressed(state, action) {
+    updateSearchedData(state, action) {
       state.searchedData = state.searchedData.map(item => {
         if (item.word === action.payload)
           return {
