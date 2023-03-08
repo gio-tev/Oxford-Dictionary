@@ -48,19 +48,6 @@ export const deleteFavorite = word => {
   });
   return promise;
 };
-// export const deleteAll = word => {
-//   const promise = new Promise((resolve, reject) => {
-//     database.transaction(tx => {
-//       tx.executeSql(
-//         'DELETE FROM favorites',
-//         [],
-//         (_, result) => resolve(result),
-//         (_, error) => reject(error)
-//       );
-//     });
-//   });
-//   return promise;
-// };
 
 export const fetchFavorites = () => {
   const promise = new Promise((resolve, reject) => {

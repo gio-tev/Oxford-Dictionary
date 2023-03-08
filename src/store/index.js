@@ -9,6 +9,7 @@ const themeSlice = createSlice({
     setAsyncStorageThemeState(state, action) {
       state.darkMode = action.payload;
     },
+
     toggleMode(state) {
       state.darkMode = !state.darkMode;
     },
@@ -28,22 +29,23 @@ const dataSlice = createSlice({
     setDatabaseFavorites(state, action) {
       state.favorites = action.payload;
     },
+
     setSearchedData(state, action) {
       state.searchedData = action.payload;
     },
+
     setNoResults(state, action) {
       state.noResults = action.payload;
     },
+
     updateSearchedData(state, action) {
       state.searchedData = state.searchedData.map(item => {
-        if (item.word === action.payload)
-          return {
-            favIconPressed: !item.favIconPressed,
-            word: item.word,
-          };
-        else return item;
+        return item.word === action.payload
+          ? { word: item.word, favIconPressed: !item.favIconPressed }
+          : item;
       });
     },
+
     setFavorites(state, action) {
       const sameItem = state.favorites.some(item => item.word === action.payload.word);
 

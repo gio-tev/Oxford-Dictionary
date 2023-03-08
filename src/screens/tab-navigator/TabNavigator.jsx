@@ -18,6 +18,7 @@ function TabNavigator() {
           borderTopWidth: 0,
           elevation: 0,
         },
+        tabBarIconStyle: { marginTop: 5 },
         tabBarLabelStyle: { marginBottom: 10 },
         tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: colors.primarySky,

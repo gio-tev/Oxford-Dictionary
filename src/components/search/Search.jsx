@@ -21,12 +21,6 @@ const Search = () => {
   const [text, setText] = useState('');
   const [value] = useDebounce(text, 500);
 
-  const handleInput = input => {
-    if (input.length === 0) dispatch(dataActions.setSearchedData([]));
-    if (noResults) dispatch(dataActions.setNoResults(false));
-    setText(input.trim());
-  };
-
   useEffect(() => {
     const getWords = async inputValue => {
       const data = await searchWords(inputValue);
@@ -56,6 +50,12 @@ const Search = () => {
     };
     getWords(value);
   }, [value]);
+
+  const handleInput = input => {
+    if (input.length === 0) dispatch(dataActions.setSearchedData([]));
+    if (noResults) dispatch(dataActions.setNoResults(false));
+    setText(input.trim());
+  };
 
   const backgroundColor = darkMode ? colors.primaryGrey : colors.inputLightBg;
   const color = darkMode ? 'white' : 'black';
