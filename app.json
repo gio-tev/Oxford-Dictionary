@@ -14,9 +14,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -32,8 +30,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "19eceef7-6d20-4dc0-846a-4910e18492ae"
+        "projectId": "2df99a29-3160-4648-a484-25416da6faea"
       }
-    }
+    },
+    "owner": "gio-tev"
   }
 }

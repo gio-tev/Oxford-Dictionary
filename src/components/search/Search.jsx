@@ -62,7 +62,12 @@ const Search = () => {
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
-      <Ionicons style={styles.searchIcon} name="search" size={24} color={colors.primarySky} />
+      <Ionicons
+        style={styles.searchIcon}
+        name="search"
+        size={24}
+        color={colors.primarySky}
+      />
 
       <TextInput
         style={[styles.input, { color }]}
